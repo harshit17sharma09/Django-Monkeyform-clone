@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from main.views import CustomFormView,HomePageView
 
 urlpatterns = [
+    url(r'^$',HomePageView.as_view(),name='home'),
+    url(r'^form/(?P<form_pk>\d+)/$',CustomFormView.as_view(),name='custom-form'),
     url(r'^admin/', admin.site.urls),
+
 ]
