@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block content%}
+<h1>Responses for {{ form.title }}</h1>
+{% if object_list %}
+<ul>
+    {% for response in object_list %}
+    <li>
+        {{ response.response }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %} {% endblock %}

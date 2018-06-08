@@ -9,6 +9,9 @@ from django.views.generic import FormView
 from django.views.generic import ListView
 
 from main.models import FormSchema
+from django.core.urlresolvers import reverse
+from django.gttp.response import HttpResponseRedirect
+
 
 
 
@@ -16,7 +19,8 @@ class CustomFormView(FormView):
     template_name = "custom_form.html"
 
     def get_form(self):
-        form_structure = FormSchema.objects.get(pk=1).schema 
+        form_structure = FormSchema.objects.get(pk=self.kwargs["form_pk"]).schema
+        # form_structure = FormSchema.objects.get(pk=1).schema 
         # form_structure_json = """{
         #     "name" : "string"   ,
         #     "age"   : "number"  ,
@@ -45,6 +49,32 @@ class CustomFormView(FormView):
         else:
             return None
 
+    def form_valid(self,form):
+        custom_form = FormSchema.objects.get(pk=self.kwargs["form_pk"])
+        user_response = form.cleaned_data
+
+        form_response = FormResponse(form=custom_form,response=user_response)
+        form_response.save()
+
+        return HttpResponseRedirect(reverse('home'))
+
 class HomePageView(ListView):
     model = FormSchema
     template_name = "home.html"
+
+
+class FormResponseView(ListView):
+    template_name = "form_responses.html"
+
+    def get_context_data(self,**kwargs):
+        ctx = super(FormResponseView,self).get_context_data(**kwargs)
+        ctx["form"] =self.get_form()
+
+        return ctx
+
+    def get_queryset(self):
+        form = self.get_form()
+        return FormResponse.objects.filter(form=form)
+
+    def get_form(self):
+        return FormSchema.objects.get(pk=self.kwargs["form_pk"])
