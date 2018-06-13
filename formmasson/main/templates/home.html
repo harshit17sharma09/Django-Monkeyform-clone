@@ -9,6 +9,7 @@
         <a href="{% url 'custom-form' form_pk=form.pk %}">
             {{ form.title }}
         </a>
+        <a href="{% url 'form-responses' form_pk=form.pk %}">See Responses</a>
     </li>
     {% endfor %}
 </ul>

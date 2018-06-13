@@ -8,6 +8,9 @@
 
 <body>
     <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'create-form' %}">Create New Form</a>
+    <br />
+    <a href="{% url 'edit-form' form_pk=form.pk %}">Edit Form</a>
 </body>
 {% block content %} {% endblock %}
 
