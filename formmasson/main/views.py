@@ -60,6 +60,14 @@ class CustomFormView(FormView):
 
         return HttpResponseRedirect(reverse('home'))
 
+    def get_context_data(self, **kwargs):
+        ctx = super(CustomFormView, self).get_context_data(**kwargs)
+
+        form_schema = FormSchema.objects.get(pk=self.kwargs["form_pk"])
+        ctx["form_schema"] = form_schema
+
+        return ctx
+
 class HomePageView(ListView):
     model = FormSchema
     template_name = "home.html"
@@ -88,7 +96,9 @@ class FormResponseListView(TemplateView):
                     response_values.append(response_data[field_name])
                 else:
                     response_values.append('')
-            responses_list.append(response_values)
+            if any(response_values):
+                responses_list.append(response_values)
+            
 
         ctx["object_list"] = responses_list
         
